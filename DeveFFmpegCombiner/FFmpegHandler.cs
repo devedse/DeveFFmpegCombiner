@@ -23,7 +23,7 @@ namespace DeveFFmpegCombiner
 
         public void CreateFilesList()
         {
-            var files = CreateFilesListInternal(pathToCombine).Skip(2500).Take(100).ToList();
+            var files = CreateFilesListInternal(pathToCombine).ToList();
 
             using (var streamWriter = new StreamWriter(new FileStream(fileListPath, FileMode.Create, FileAccess.Write, FileShare.Read)))
             {
