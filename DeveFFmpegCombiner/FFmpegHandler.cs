@@ -23,7 +23,7 @@ namespace DeveFFmpegCombiner
 
         public void CreateFilesList()
         {
-            var files = CreateFilesListInternal(pathToCombine).Take(100).ToList();
+            var files = CreateFilesListInternal(pathToCombine).Skip(2500).Take(100).ToList();
 
             using (var streamWriter = new StreamWriter(new FileStream(fileListPath, FileMode.Create, FileAccess.Write, FileShare.Read)))
             {
@@ -48,12 +48,17 @@ namespace DeveFFmpegCombiner
             arguments += $"-f concat ";
             arguments += $"-safe 0 ";
             arguments += $"-i \"{fileListPath}\" ";
-            arguments += $"-framerate 30 ";
+            arguments += $"-f concat ";
+            arguments += $"-safe 0 ";
+            arguments += $"-i \"{fileListPath}\" ";
+            arguments += $"-framerate 60 ";
+            //arguments += $"-filter_complex \"[1],crop = 2478:1205:40:40; [0] [pip] overlay=main_w-overlay_w-10:main_h-overlay_h-10\" ";
+            arguments += $"-filter_complex \"[1]crop=40:40:2478:1205,scale=240:-2 [pip]; [0][pip] overlay=10:670,crop=4000:2250:0:660,scale=1920:1080\" ";
             arguments += $"-pix_fmt yuv420p ";
             arguments += $"-vcodec libx264 ";
             arguments += $"-crf 18 ";
             arguments += $"-preset slow ";
-            arguments += $"-filter:v \"crop=4000:2250:0:660,scale=1920:1080\" ";
+            //arguments += $"-filter:v \"crop=4000:2250:0:660,scale=1920:1080\" ";
             arguments += $"\"{outFile}\"";
 
             Console.WriteLine($"Running command: ffmpeg {arguments}");
