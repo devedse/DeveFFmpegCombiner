@@ -16,7 +16,7 @@ namespace DeveFFmpegCombiner
             this.ffmpegExe = ffmpegExe;
         }
 
-        public void CreateTimeLapse(string pathToCombine, string outputFileName, Rectangle selectionRect, Rectangle timerRect)
+        public void CreateTimeLapse(string pathToCombine, string outputFileName, Rectangle selectionRect, Rectangle pictureInPictureRect)
         {
             var fileListPath = Path.Combine(pathToCombine, Constants.FileListFileName);
             var files = CreateFilesListInternal(pathToCombine).ToList();
@@ -49,10 +49,10 @@ namespace DeveFFmpegCombiner
             arguments += $"-i \"{fileListPath}\" ";
             arguments += $"-framerate 60 ";
             //arguments += $"-filter_complex \"[1],crop = 2478:1205:40:40; [0] [pip] overlay=main_w-overlay_w-10:main_h-overlay_h-10\" ";
-            arguments += $"-filter_complex \"[1]crop=40:40:2478:1205,scale=240:-2 [pip]; [0][pip] overlay=10:670,crop=4000:2250:0:660,scale=1920:1080\" ";
+            arguments += $"-filter_complex \"[1]crop={pictureInPictureRect.ToFFmpegStr()},scale=240:-2 [pip]; [0][pip] overlay=10:670,crop={selectionRect.ToFFmpegStr()},scale=1920:1080\" ";
             arguments += $"-pix_fmt yuv420p ";
             arguments += $"-vcodec libx264 ";
-            arguments += $"-crf paint ";
+            arguments += $"-crf 18 ";
             arguments += $"-preset slow ";
             //arguments += $"-filter:v \"crop=4000:2250:0:660,scale=1920:1080\" ";
             arguments += $"\"{outFile}\"";
