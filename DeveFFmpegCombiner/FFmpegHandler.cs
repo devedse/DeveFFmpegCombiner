@@ -57,7 +57,14 @@ namespace DeveFFmpegCombiner
             arguments += $"-i \"{fileListPath}\" ";
             arguments += $"-r {frameRate} ";
             //arguments += $"-filter_complex \"[1],crop = 2478:1205:40:40; [0] [pip] overlay=main_w-overlay_w-10:main_h-overlay_h-10\" ";
-            arguments += $"-filter_complex \"[1]crop={pictureInPictureRect.ToFFmpegStr()},scale={sizeOfPip}:-1 [pip]; [0]crop={selectionRect.ToFFmpegStr()},scale={outWidth}:{outHeight} [cropped];[cropped][pip]overlay=10:10\" ";
+            if (pictureInPictureRect == Rectangle.Empty)
+            {
+                arguments += $"-filter_complex \"[0]crop={selectionRect.ToFFmpegStr()},scale={outWidth}:{outHeight}\" ";
+            }
+            else
+            {
+                arguments += $"-filter_complex \"[1]crop={pictureInPictureRect.ToFFmpegStr()},scale={sizeOfPip}:-1 [pip]; [0]crop={selectionRect.ToFFmpegStr()},scale={outWidth}:{outHeight} [cropped];[cropped][pip]overlay=10:10\" ";
+            }
             arguments += $"-pix_fmt yuv420p ";
             arguments += $"-vcodec libx264 ";
             arguments += $"-crf 18 ";
