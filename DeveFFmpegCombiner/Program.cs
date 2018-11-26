@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Threading.Tasks;
 
 namespace DeveFFmpegCombiner
@@ -16,9 +17,20 @@ namespace DeveFFmpegCombiner
 
         public static async Task MainAsync(string[] args)
         {
-            var ffmpegHandler = new FFmpegHandler(Constants.FfmpegPath, @"C:\TheCFolder\Avalan2018Timelapse", "OutputTimeLapse.mp4");
+            var ffmpegHandler = new FFmpegHandler(Constants.FfmpegPath);
 
-            ffmpegHandler.CreateFilesList();
+
+            var selectionRect1 = new Rectangle(0, 660, 4000, 2250);
+            var timerRect1 = new Rectangle(2479, 1201, 40, 40);
+            
+            ffmpegHandler.CreateTimeLapse(@"C:\TheCFolder\Avalan2018Timelapse\Part 1 Direct", "OutputTimeLapse.mp4", selectionRect1, timerRect1);
+
+
+
+            var selectionRect2 = new Rectangle(0, 700, 4000, 2250);
+            var timerRect2 = new Rectangle(2455, 1440, 40, 40);
+
+            ffmpegHandler.CreateTimeLapse(@"C:\TheCFolder\Avalan2018Timelapse\Part 2 Direct", "OutputTimeLapse.mp4", selectionRect2, timerRect2);
         }
     }
 }

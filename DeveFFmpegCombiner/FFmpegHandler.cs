@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 
@@ -9,20 +10,15 @@ namespace DeveFFmpegCombiner
     public class FFmpegHandler
     {
         private readonly string ffmpegExe;
-        private readonly string pathToCombine;
-        private readonly string outputFileName;
-        private readonly string fileListPath;
 
-        public FFmpegHandler(string ffmpegExe, string pathToCombine, string outputFileName)
+        public FFmpegHandler(string ffmpegExe)
         {
             this.ffmpegExe = ffmpegExe;
-            this.pathToCombine = pathToCombine;
-            this.outputFileName = outputFileName;
-            fileListPath = Path.Combine(pathToCombine, Constants.FileListFileName);
         }
 
-        public void CreateFilesList()
+        public void CreateTimeLapse(string pathToCombine, string outputFileName, Rectangle selectionRect, Rectangle timerRect)
         {
+            var fileListPath = Path.Combine(pathToCombine, Constants.FileListFileName);
             var files = CreateFilesListInternal(pathToCombine).ToList();
 
             using (var streamWriter = new StreamWriter(new FileStream(fileListPath, FileMode.Create, FileAccess.Write, FileShare.Read)))
@@ -56,7 +52,7 @@ namespace DeveFFmpegCombiner
             arguments += $"-filter_complex \"[1]crop=40:40:2478:1205,scale=240:-2 [pip]; [0][pip] overlay=10:670,crop=4000:2250:0:660,scale=1920:1080\" ";
             arguments += $"-pix_fmt yuv420p ";
             arguments += $"-vcodec libx264 ";
-            arguments += $"-crf 18 ";
+            arguments += $"-crf paint ";
             arguments += $"-preset slow ";
             //arguments += $"-filter:v \"crop=4000:2250:0:660,scale=1920:1080\" ";
             arguments += $"\"{outFile}\"";
@@ -96,7 +92,11 @@ namespace DeveFFmpegCombiner
 
             foreach (var fileItem in Directory.GetFiles(path))
             {
-                yield return fileItem;
+                var extension = Path.GetExtension(fileItem);
+                if (Constants.ValidImageTypes.Any(t => t.Equals(extension, StringComparison.OrdinalIgnoreCase)))
+                {
+                    yield return fileItem;
+                }
             }
         }
     }
