@@ -78,16 +78,7 @@ namespace DeveFFmpegCombiner
 
         private IEnumerable<string> CreateFilesListInternal(string path)
         {
-            var dirs = Directory.GetDirectories(path);
-
-
-            //var blah = dirs.Select(t => new
-            //{
-            //    Original = t,
-            //    Dingetje = new string(Path.GetFileName(t).TakeWhile(c => char.IsDigit(c)).ToArray())
-            //});
-
-            //var dirsOrdered = dirs.OrderBy(t => int.Parse(new string(Path.GetFileName(t).TakeWhile(c => char.IsDigit(c)).ToArray()))).ToList();
+            var dirs = Directory.GetDirectories(path).CustomSort().ToList();
 
             foreach (var dir in dirs)
             {
@@ -98,7 +89,9 @@ namespace DeveFFmpegCombiner
                 }
             }
 
-            foreach (var fileItem in Directory.GetFiles(path))
+            var files = Directory.GetFiles(path).CustomSort().ToList();
+
+            foreach (var fileItem in files)
             {
                 var extension = Path.GetExtension(fileItem);
                 if (Constants.ValidImageTypes.Any(t => t.Equals(extension, StringComparison.OrdinalIgnoreCase)))
