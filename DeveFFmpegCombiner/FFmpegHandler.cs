@@ -16,10 +16,10 @@ namespace DeveFFmpegCombiner
             this.ffmpegExe = ffmpegExe;
         }
 
-        public void CreateTimeLapse(string pathToCombine, string outputFileName, Rectangle selectionRect, Rectangle pictureInPictureRect)
+        public void CreateTimeLapse(string pathToCombine, string outputFileName, Rectangle selectionRect, Rectangle pictureInPictureRect, int takeEveryNthPicture = 1)
         {
             var fileListPath = Path.Combine(pathToCombine, Constants.FileListFileName);
-            var files = CreateFilesListInternal(pathToCombine).ToList();
+            var files = CreateFilesListInternal(pathToCombine).TakeNthItems(takeEveryNthPicture).ToList();
 
             using (var streamWriter = new StreamWriter(new FileStream(fileListPath, FileMode.Create, FileAccess.Write, FileShare.Read)))
             {
@@ -61,7 +61,7 @@ namespace DeveFFmpegCombiner
             arguments += $"-pix_fmt yuv420p ";
             arguments += $"-vcodec libx264 ";
             arguments += $"-crf 18 ";
-            arguments += $"-preset veryslow "; //ultrafast,superfast,veryfast,faster,fast,medium,slow,slower,veryslow,placebo
+            arguments += $"-preset slow "; //ultrafast,superfast,veryfast,faster,fast,medium,slow,slower,veryslow,placebo
             //arguments += $"-filter:v \"crop=4000:2250:0:660,scale=1920:1080\" ";
             arguments += $"\"{outFile}\"";
 

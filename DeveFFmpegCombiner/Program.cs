@@ -19,18 +19,20 @@ namespace DeveFFmpegCombiner
         {
             var ffmpegHandler = new FFmpegHandler(Constants.FfmpegPath);
 
+            int takeNthPicture = 1;
+
 
             var selectionRect1 = new Rectangle(0, 660, 4000, 2250);
             var pictureInPictureRect1 = new Rectangle(2479, 1201, 40, 40);
 
-            ffmpegHandler.CreateTimeLapse(@"C:\TheCFolder\Avalan2018Timelapse\Part 1 Direct", "OutputTimeLapse.mp4", selectionRect1, pictureInPictureRect1);
+            ffmpegHandler.CreateTimeLapse(@"C:\TheCFolder\Avalan2018Timelapse\Part 1 Direct", "OutputTimeLapse.mp4", selectionRect1, pictureInPictureRect1, takeNthPicture);
 
 
 
             var selectionRect2 = new Rectangle(0, 700, 4000, 2250);
             var pictureInPictureRect2 = new Rectangle(2455, 1440, 40, 40);
 
-            ffmpegHandler.CreateTimeLapse(@"C:\TheCFolder\Avalan2018Timelapse\Part 2 Direct", "OutputTimeLapse.mp4", selectionRect2, pictureInPictureRect2);
+            ffmpegHandler.CreateTimeLapse(@"C:\TheCFolder\Avalan2018Timelapse\Part 2 Direct", "OutputTimeLapse.mp4", selectionRect2, pictureInPictureRect2, takeNthPicture);
         }
     }
 }
