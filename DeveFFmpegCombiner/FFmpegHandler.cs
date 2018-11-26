@@ -40,14 +40,18 @@ namespace DeveFFmpegCombiner
                 File.Delete(outFile);
             }
 
+            int frameRate = 60;
+
             var arguments = "";
             arguments += $"-f concat ";
             arguments += $"-safe 0 ";
+            arguments += $"-r {frameRate} ";
             arguments += $"-i \"{fileListPath}\" ";
             arguments += $"-f concat ";
             arguments += $"-safe 0 ";
+            arguments += $"-r {frameRate} ";
             arguments += $"-i \"{fileListPath}\" ";
-            arguments += $"-framerate 60 ";
+            arguments += $"-r {frameRate} ";
             //arguments += $"-filter_complex \"[1],crop = 2478:1205:40:40; [0] [pip] overlay=main_w-overlay_w-10:main_h-overlay_h-10\" ";
             arguments += $"-filter_complex \"[1]crop={pictureInPictureRect.ToFFmpegStr()},scale=240:-2 [pip]; [0][pip] overlay=10:670,crop={selectionRect.ToFFmpegStr()},scale=1920:1080\" ";
             arguments += $"-pix_fmt yuv420p ";
