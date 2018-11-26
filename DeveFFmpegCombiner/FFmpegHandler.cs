@@ -41,6 +41,10 @@ namespace DeveFFmpegCombiner
             }
 
             int frameRate = 60;
+            int outWidth = 1920 * 2;
+            int outHeight = 1080 * 2;
+
+            int sizeOfPip = 120 * (outWidth / 1920);
 
             var arguments = "";
             arguments += $"-f concat ";
@@ -53,11 +57,11 @@ namespace DeveFFmpegCombiner
             arguments += $"-i \"{fileListPath}\" ";
             arguments += $"-r {frameRate} ";
             //arguments += $"-filter_complex \"[1],crop = 2478:1205:40:40; [0] [pip] overlay=main_w-overlay_w-10:main_h-overlay_h-10\" ";
-            arguments += $"-filter_complex \"[1]crop={pictureInPictureRect.ToFFmpegStr()},scale=240:-2 [pip]; [0][pip] overlay=10:670,crop={selectionRect.ToFFmpegStr()},scale=1920:1080\" ";
+            arguments += $"-filter_complex \"[1]crop={pictureInPictureRect.ToFFmpegStr()},scale={sizeOfPip}:-1 [pip]; [0]crop={selectionRect.ToFFmpegStr()},scale={outWidth}:{outHeight} [cropped];[cropped][pip]overlay=10:10\" ";
             arguments += $"-pix_fmt yuv420p ";
             arguments += $"-vcodec libx264 ";
             arguments += $"-crf 18 ";
-            arguments += $"-preset slow ";
+            arguments += $"-preset veryslow "; //ultrafast,superfast,veryfast,faster,fast,medium,slow,slower,veryslow,placebo
             //arguments += $"-filter:v \"crop=4000:2250:0:660,scale=1920:1080\" ";
             arguments += $"\"{outFile}\"";
 
